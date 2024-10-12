@@ -1,0 +1,63 @@
+---
+title: "Datasaurus"
+output: html_document
+---
+
+Este conjunto de datos fue creado por Alberto Cairo y distribuido como parte del trabajo de Datasaurus de Justin Matejka y George Fitzmaurice en 2017. El dataset fue diseñado para mostrar la importancia de visualizar los datos en lugar de solo analizar estadísticas descriptivas.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Carga de librerías
+
+```{r}
+library(datasauRus)
+library(tidyverse)
+library(ggplot2)
+```
+
+### Resumen estadístico 
+
+```{r}
+datasaurus_dozen %>%
+     group_by(dataset) %>%
+     summarise(mean_x = mean(x), mean_y = mean(y), std_dev_x = sd(x), std_dev_y = sd(y), corr_x_y = cor(x,y))
+```
+
+### Gráficas de cada conjunto
+
+```{r}
+
+ggplot(datasaurus_dozen, aes(x = x, y = y, colour = dataset))+
+     geom_point()+
+     theme_void()+
+     theme(legend.position = "none")+
+     facet_wrap(~dataset, ncol = 3)
+```
+
+---
+El resultado de este código genera una serie de gráficos de dispersión, cada uno mostrando un conjunto de datos con una forma diferente. A pesar de que sus estadísticas descriptivas son similares, las distribuciones visuales varían significativamente.
+---
+
+### Selección del conjunto dino
+
+```{r}
+dfgrupo<-datasaurus_dozen %>%
+  filter(dataset=="dino")
+dfgrupo
+```
+
+### Cálculo de regresión lineal
+
+```{r}
+# Crear la gráfica con la línea de regresión
+ggplot(dfgrupo, aes(x = x, y = y)) +
+  geom_point(size = 3, color = "blue") +
+  geom_smooth(method = "lm", color = "red", se = FALSE) +
+  theme_minimal()
+```
+
+### Conclusión
+
+El Dataset Datasaurus es un excelente recurso para resaltar la importancia de la visualización en el análisis de datos. Aunque dos conjuntos de datos puedan tener propiedades estadísticas idénticas, su visualización puede revelar patrones importantes y ayudar a evitar conclusiones erróneas basadas únicamente en estadísticas descriptivas.
